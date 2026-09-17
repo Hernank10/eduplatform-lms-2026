@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Dashboard del Docente{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>👩‍🏫 Dashboard del Docente</h2>
+  <p class="text-muted">Bienvenido, {{ user.get_full_name|default:user.username }}</p>
+  <hr>
+
+  <!-- Estadísticas -->
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card text-white bg-primary">
+        <div class="card-body">
+          <h5 class="card-title">{{ courses.count }}</h5>
+          <p class="card-text mb-0">Cursos que dictas</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-success">
+        <div class="card-body">
+          <h5 class="card-title">{{ submissions.count }}</h5>
+          <p class="card-text mb-0">Entregas totales</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-warning">
+        <div class="card-body">
+          <h5 class="card-title">{{ pending_grading.count }}</h5>
+          <p class="card-text mb-0">Pendientes de calificar</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-danger">
+        <div class="card-body">
+          <h5 class="card-title">{{ blocked_progress.count }}</h5>
+          <p class="card-text mb-0">Estudiantes bloqueados</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cursos -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h4 class="mb-0">📘 Cursos que dictas</h4>
+    </div>
+    <div class="card-body">
+      {% if courses %}
+        <div class="row">
+          {% for curso in courses %}
+            <div class="col-md-6 mb-3">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h5 class="card-title">{{ curso.title }}</h5>
+                  <p class="card-text">
+                    <span class="badge bg-info">{{ curso.get_level_display }}</span>
+                    <span class="badge bg-secondary">{{ curso.lessons.count }} lecciones</span>
+                  </p>
+                  <p class="card-text small">{{ curso.description|truncatechars:100 }}</p>
+                  <a href="/admin/courses/course/{{ curso.id }}/change/" class="btn btn-sm btn-outline-primary">Editar</a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="alert alert-info">No tienes cursos creados. <a href="/admin/courses/course/add/">Crea uno</a></div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Entregas pendientes -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h4 class="mb-0">⏳ Entregas pendientes de calificar</h4>
+    </div>
+    <div class="card-body">
+      {% if pending_grading %}
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Estudiante</th>
+              <th>Evaluación</th>
+              <th>Fecha</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sub in pending_grading %}
+              <tr>
+                <td>{{ sub.student.username }}</td>
+                <td>{{ sub.assessment.title }}</td>
+                <td>{{ sub.submitted_at|date:"d/m/Y H:i" }}</td>
+                <td>
+                  <a href="/admin/assessments/submission/{{ sub.id }}/change/" class="btn btn-sm btn-primary">Calificar</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <div class="alert alert-success">No hay entregas pendientes.</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Estudiantes bloqueados -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h4 class="mb-0">⛔ Estudiantes bloqueados</h4>
+    </div>
+    <div class="card-body">
+      {% if blocked_progress %}
+        <p class="text-muted">Estudiantes con lecciones pendientes o en progreso:</p>
+        <ul class="list-group">
+          {% for p in blocked_progress|slice:":10" %}
+            <li class="list-group-item d-flex justify-content-between">
+              <span>{{ p.student.username }} - {{ p.lesson.title }}</span>
+              <span class="badge bg-warning">{{ p.get_status_display }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="alert alert-success">No hay estudiantes bloqueados.</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

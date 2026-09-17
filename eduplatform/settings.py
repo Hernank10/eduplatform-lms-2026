@@ -152,3 +152,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Rutas para archivos subidos por usuarios (fotos de manuscritos)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+# Auth redirects
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = '/'
