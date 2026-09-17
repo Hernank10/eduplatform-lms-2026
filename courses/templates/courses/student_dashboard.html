@@ -2,26 +2,47 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Panel del Alumno</title>
+    <title>Mi Dashboard</title>
 </head>
 <body>
-    <h1>Bienvenido, {{ user.username }}</h1>
 
-    <h2>Mis cursos</h2>
+<h1>📊 Dashboard del Estudiante</h1>
 
-    {% if progress_data %}
-        <ul>
-            {% for item in progress_data %}
-                <li>
-                    <strong>{{ item.course.title }}</strong><br>
-                    Progreso: {{ item.percent }} %
-                    ({{ item.completed }} / {{ item.total }} lecciones)
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No estás inscrito en ningún curso aún.</p>
-    {% endif %}
+<hr>
+
+<h2>📘 Mis cursos</h2>
+
+{% if enrollments %}
+    <ul>
+        {% for enrollment in enrollments %}
+            <li>
+                <strong>{{ enrollment.course.title }}</strong>
+                — inscrito el {{ enrollment.enrolled_at|date:"d/m/Y" }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No estás inscrito en ningún curso aún.</p>
+{% endif %}
+
+<hr>
+
+<h2>✅ Progreso por lección</h2>
+
+{% if progress_list %}
+    <ul>
+        {% for progress in progress_list %}
+            <li>
+                Curso: <strong>{{ progress.lesson.course.title }}</strong><br>
+                Lección: {{ progress.lesson.title }}<br>
+                Estado: {{ progress.status }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No hay progreso registrado todavía.</p>
+{% endif %}
+
 </body>
 </html>
 

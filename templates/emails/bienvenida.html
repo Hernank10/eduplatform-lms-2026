@@ -1,0 +1,34 @@
+{% load i18n %}
+{# Obtenemos si el idioma actual se lee de derecha a izquierda #}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+
+<div dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}" 
+     style="text-align: {% if LANGUAGE_BIDI %}right{% else %}left{% endif %}; 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            line-height: 1.6;">
+    
+    <h2 style="color: #2c3e50;">
+        {% trans "¡Bienvenido a la Plataforma de Redacción Global!" %}
+    </h2>
+    
+    <p>{% trans "Estimado estudiante," %}</p>
+    
+    <p>
+        {% trans "Nuestro objetivo es rescatar la belleza de la escritura manual y la precisión de la lengua castellana en la era digital." %}
+    </p>
+
+    <div style="background-color: #f9f9f9; border-left: 4px solid #3498db; padding: 15px; margin: 20px 0;">
+        <p>
+            {% trans "Tu primera lección sobre 'Morfología' ya está disponible. Por favor, asegúrate de practicar tu caligrafía antes de subir tu primer ejercicio." %}
+        </p>
+    </div>
+
+    <p>{% trans "Atentamente," %}<br>
+    <strong>{% trans "Tu Profesor de Lengua" %}</strong></p>
+    
+    <hr style="border: 0; border-top: 1px solid #eee; margin-top: 30px;">
+    <small style="color: #7f8c8d;">
+        {% trans "Este correo ha sido enviado siguiendo tu zona horaria preferida." %}
+    </small>
+</div>

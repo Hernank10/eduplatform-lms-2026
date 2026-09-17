@@ -1,0 +1,59 @@
+﻿{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Recursos Educativos{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>📚 Recursos Educativos</h2>
+  <p class="text-muted">Total: {{ recursos.count }} recursos</p>
+  <hr>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <form method="get" class="row g-2">
+        <div class="col">
+          <select name="tipo" class="form-select">
+            <option value="">Todos los tipos</option>
+            <option value="html" {% if tipo_filtro == 'html' %}selected{% endif %}>HTML interactivo</option>
+            <option value="json" {% if tipo_filtro == 'json' %}selected{% endif %}>JSON</option>
+            <option value="py" {% if tipo_filtro == 'py' %}selected{% endif %}>Python</option>
+          </select>
+        </div>
+        <div class="col">
+          <select name="categoria" class="form-select">
+            <option value="">Todas las categorías</option>
+            {% for cat in categorias %}
+              <option value="{{ cat }}" {% if categoria_filtro == cat %}selected{% endif %}>{{ cat }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-primary">Filtrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    {% for r in recursos %}
+    <div class="col-md-4 mb-3">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">{{ r.title|truncatechars:60 }}</h5>
+          <p class="card-text">
+            <span class="badge bg-primary">{{ r.get_resource_type_display }}</span>
+            {% if r.category %}<span class="badge bg-secondary">{{ r.category }}</span>{% endif %}
+          </p>
+          <a href="{% url 'resource_detail' r.pk %}" class="btn btn-sm btn-outline-primary">Abrir</a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <div class="alert alert-info">No hay recursos con esos filtros.</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

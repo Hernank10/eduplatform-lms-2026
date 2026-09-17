@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import Assessment, Question, Choice, Submission
 
-
 # ─────────────────────────────
 # Inline para opciones
 # ─────────────────────────────
@@ -39,10 +38,24 @@ class QuestionAdmin(admin.ModelAdmin):
 
 
 # ─────────────────────────────
-# Submission
+# Submission (Entregas Combinadas)
 # ─────────────────────────────
 @admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
-    list_display = ("user", "assessment", "score", "submitted_at")
-    readonly_fields = ("submitted_at",)
-
+    # Usamos los campos nuevos: grade e is_graded
+    list_display = ('student', 'assessment', 'submitted_at', 'grade', 'is_graded')
+    list_filter = ('is_graded', 'submitted_at')
+    
+    # Organizamos los campos para que sea cómodo corregir
+    fieldsets = (
+        ('Información del Estudiante', {
+            'fields': ('student', 'assessment', 'submitted_at')
+        }),
+        ('Trabajo Entregado', {
+            'fields': ('handwritten_work', 'transcription')
+        }),
+        ('Evaluación del Profesor', {
+            'fields': ('grade', 'teacher_feedback', 'is_graded')
+        }),
+    )
+    readonly_fields = ('submitted_at',)

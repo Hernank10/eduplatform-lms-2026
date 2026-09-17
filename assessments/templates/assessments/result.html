@@ -1,0 +1,22 @@
+<h1>Resultado del examen</h1>
+
+<p><strong>Evaluación:</strong> {{ assessment.title }}</p>
+
+<p><strong>Puntaje:</strong> {{ score }}%</p>
+
+{% if passed %}
+    <p style="color: green; font-weight: bold;">
+        ✅ Aprobado
+    </p>
+{% else %}
+    <p style="color: red; font-weight: bold;">
+        ❌ No aprobado
+    </p>
+{% endif %}
+
+<hr>
+
+<a href="/admin/" class="btn btn-secondary">Panel</a>
+<a href="/" class="btn btn-outline-primary">Inicio</a>
+
+

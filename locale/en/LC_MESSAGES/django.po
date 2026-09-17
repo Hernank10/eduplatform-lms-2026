@@ -1,0 +1,103 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-09 22:04+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: accounts/models.py:22
+msgid "Español"
+msgstr ""
+
+#: accounts/models.py:23
+msgid "Inglés"
+msgstr ""
+
+#: eduplatform/settings.py:121
+msgid "Spanish"
+msgstr ""
+
+#: eduplatform/settings.py:122
+msgid "English"
+msgstr ""
+
+#: eduplatform/settings.py:123
+msgid "Chinese"
+msgstr ""
+
+#: eduplatform/settings.py:124
+msgid "Hindi"
+msgstr ""
+
+#: eduplatform/settings.py:125
+msgid "Arabic"
+msgstr ""
+
+#: eduplatform/settings.py:126
+msgid "French"
+msgstr ""
+
+#: eduplatform/settings.py:127
+msgid "Portuguese"
+msgstr ""
+
+#: eduplatform/settings.py:128
+msgid "Russian"
+msgstr ""
+
+#: eduplatform/settings.py:129
+msgid "Bengali"
+msgstr ""
+
+#: eduplatform/settings.py:130
+msgid "Urdu"
+msgstr ""
+
+#: templates/emails/bienvenida.html:12
+msgid "¡Bienvenido a la Plataforma de Redacción Global!"
+msgstr "Welcome to the Global Writing Platform!"
+
+#: templates/emails/bienvenida.html:15
+msgid "Estimado estudiante,"
+msgstr "Dear student,"
+
+#: templates/emails/bienvenida.html:18
+msgid ""
+"Nuestro objetivo es rescatar la belleza de la escritura manual y la "
+"precisión de la lengua castellana en la era digital."
+msgstr ""
+"Our goal is to rescue the beauty of handwriting and the precision of the "
+"Spanish language in the digital age."
+
+#: templates/emails/bienvenida.html:23
+msgid ""
+"Tu primera lección sobre 'Morfología' ya está disponible. Por favor, "
+"asegúrate de practicar tu caligrafía antes de subir tu primer ejercicio."
+msgstr ""
+"Your first lesson on 'Morphology' is now available. Please, make sure to "
+"practice your calligraphy before uploading your first exercise. "
+
+#: templates/emails/bienvenida.html:27
+msgid "Atentamente,"
+msgstr "Sincerely,"
+
+#: templates/emails/bienvenida.html:28
+msgid "Tu Profesor de Lengua"
+msgstr "Your Language Teacher"
+
+#: templates/emails/bienvenida.html:32
+msgid "Este correo ha sido enviado siguiendo tu zona horaria preferida."
+msgstr ""

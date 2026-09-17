@@ -1,0 +1,53 @@
+{% load i18n %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>📊 {% trans "Dashboard del Estudiante" %}</h2>
+    <hr>
+
+    <div class="row">
+        <div class="col-md-8">
+            <h3>📘 {% trans "Mis cursos" %}</h3>
+            {% if progress_data %}
+                {% for item in progress_data %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.course.title }}</h5>
+                        <p class="card-text">
+                            {% trans "Lecciones completadas:" %} {{ item.completed }} / {{ item.total }}
+                        </p>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" 
+                                 style="width: {{ item.percent }}%;" 
+                                 aria-valuenow="{{ item.percent }}" aria-valuemin="0" aria-valuemax="100">
+                                {{ item.percent }}%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-info">
+                    {% trans "No estás inscrito en ningún curso aún." %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            <h3>✅ {% trans "Calificaciones Recientes" %}</h3>
+            {% if recent_submissions %}
+                <ul class="list-group">
+                {% for sub in recent_submissions %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ sub.assessment.title }}
+                        <span class="badge bg-primary rounded-pill">{{ sub.grade }}</span>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>{% trans "No hay entregas registradas todavía." %}</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}{{ recurso.title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+  <a href="{% url 'resource_list' %}" class="btn btn-sm btn-outline-secondary mb-3">← Volver a recursos</a>
+
+  <h2>{{ recurso.title }}</h2>
+  <p>
+    <span class="badge bg-primary">{{ recurso.get_resource_type_display }}</span>
+    {% if recurso.category %}<span class="badge bg-secondary">{{ recurso.category }}</span>{% endif %}
+  </p>
+
+  {% if contenido %}
+    <div style="width: 100%; height: 80vh; border: 1px solid #ccc;">
+      {{ contenido|safe }}
+    </div>
+  {% else %}
+    <div class="alert alert-info">
+      Este recurso no se puede previsualizar. <a href="#">Descargar</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -14,10 +14,28 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+# IMPORTANTE: Importa la vista aquí
+from courses.views import student_dashboard 
+
+from django.views.generic import RedirectView
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='/dashboard/', permanent=False), name='home'),
     path('admin/', admin.site.urls),
+    path('i18n/', include('django.conf.urls.i18n')),
+    
+    # ESTA ES LA LÍNEA QUE FALTA:
+    path('dashboard/', student_dashboard, name='dashboard'),
+    path('accounts/', include('django.contrib.auth.urls')),
+    
     path("courses/", include("courses.urls")),
+    path("assessments/", include("assessments.urls")),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

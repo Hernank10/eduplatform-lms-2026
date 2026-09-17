@@ -3,6 +3,14 @@
 import os
 import sys
 
+# Parche temporal: usar Django 5 del PythonPortable_Django5
+# (mientras el antivirus bloquea el python.exe en esa carpeta)
+sys.path.insert(0, r'E:\PythonPortable_Django5\Lib\site-packages')
+# Asegurar que el paquete del proyecto este en el path
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
+
 
 def main():
     """Run administrative tasks."""
@@ -20,3 +28,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+

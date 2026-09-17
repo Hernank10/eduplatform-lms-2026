@@ -14,7 +14,7 @@ class Assessment(models.Model):
     ]
 
     title = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
+    description = models.TextField( blank=True, null=True)
 
     course = models.ForeignKey(
         Course,
@@ -86,24 +86,33 @@ class Choice(models.Model):
 
 
 class Submission(models.Model):
-    user = models.ForeignKey(
-        User,
+    student = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="submissions"
     )
-
     assessment = models.ForeignKey(
-        Assessment,
+        "assessments.Assessment",
         on_delete=models.CASCADE,
         related_name="submissions"
     )
-
-    score = models.FloatField(default=0)
-    passed = models.BooleanField(default=False)
-    attempt_number = models.PositiveIntegerField(default=1)
-
+    
+    # El corazón del sistema combinado
+    handwritten_work = models.ImageField(
+        upload_to='handwriting_submissions/%Y/%m/%d/',
+        verbose_name="Foto del Manuscrito",
+        null=True, blank=True
+    )
+    transcription = models.TextField(
+        verbose_name="Transcripción Digital",
+        blank=True
+    )
+    
+    # Evaluación Docente
+    grade = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    teacher_feedback = models.TextField(blank=True, verbose_name="Corrección del Profesor")
+    is_graded = models.BooleanField(default=False)
     submitted_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user} - {self.assessment} ({self.score}%)"
-
+        return f"Entrega de {self.student.username} - {self.assessment.title}"

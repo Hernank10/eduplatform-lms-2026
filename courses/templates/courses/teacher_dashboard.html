@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard del Docente</title>
+</head>
+<body>
+
+<h1>👩‍🏫 Dashboard del Docente</h1>
+
+<h2>📘 Cursos que dictas</h2>
+<ul>
+    {% for course in courses %}
+        <li>{{ course.title }}</li>
+    {% empty %}
+        <li>No tienes cursos asignados.</li>
+    {% endfor %}
+</ul>
+
+<h2>✅ Evaluaciones aprobadas</h2>
+<ul>
+    {% for submission in passed_submissions %}
+        <li>
+            {{ submission.user }} — {{ submission.assessment }}
+        </li>
+    {% empty %}
+        <li>No hay evaluaciones aprobadas aún.</li>
+    {% endfor %}
+</ul>
+
+<h2>⛔ Estudiantes bloqueados</h2>
+<ul>
+    {% for progress in blocked_progress %}
+        <li>
+            {{ progress.student }} — {{ progress.lesson }}
+            ({{ progress.status }})
+        </li>
+    {% empty %}
+        <li>No hay estudiantes bloqueados.</li>
+    {% endfor %}
+</ul>
+
+</body>
+</html>
+

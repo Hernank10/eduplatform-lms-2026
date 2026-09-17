@@ -19,10 +19,7 @@ class Course(models.Model):
         on_delete=models.CASCADE,
         related_name='courses'
     )
-    level = models.CharField(
-        max_length=2,
-        choices=LEVEL_CHOICES
-    )
+    level = models.CharField(max_length=2, choices=LEVEL_CHOICES)
     is_published = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -30,7 +27,6 @@ class Course(models.Model):
         return self.title
 
 
-# ⬇️ AQUÍ MISMO PEGAS ESTO ⬇️
 class Enrollment(models.Model):
     student = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -52,30 +48,30 @@ class Enrollment(models.Model):
 
     def __str__(self):
         return f"{self.student} → {self.course} ({self.progress}%)"
-    def __str__(self):
-        return self.title
-from django.db import models
 
-# Create your models here.
+
 class Lesson(models.Model):
     course = models.ForeignKey(
         Course,
         on_delete=models.CASCADE,
         related_name="lessons"
     )
-
     title = models.CharField(max_length=200)
     content = models.TextField()
-    order = models.PositiveIntegerField(help_text="Orden de la lección en el curso")
+    order = models.PositiveIntegerField()
     estimated_minutes = models.PositiveIntegerField(default=10)
-
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ["order"]
 
-    def __str__(self):
-        return f"{self.course.title} — {self.title}"
+    def is_unlocked_for(self, student):
+        return Progress.objects.filter(
+            student=student,
+            lesson=self,
+            status__in=["in_progress", "completed"]
+        ).exists()
+
 class Progress(models.Model):
     STATUS_CHOICES = [
         ("pending", "Pendiente"),
@@ -86,27 +82,47 @@ class Progress(models.Model):
     student = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="progress"
+        related_name="lesson_progress"
     )
-
     lesson = models.ForeignKey(
         Lesson,
         on_delete=models.CASCADE,
         related_name="progress"
     )
-
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
         default="pending"
     )
-
     completion_percent = models.PositiveIntegerField(default=0)
-
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ("student", "lesson")
 
+    def is_accessible(self):
+        return self.status in ("in_progress", "completed")
+
+
+class Resource(models.Model):
+    RESOURCE_TYPES = [
+        ('html', 'App HTML interactiva'),
+        ('json', 'Ejercicios JSON'),
+        ('py', 'Script Python'),
+        ('other', 'Otro'),
+    ]
+
+    title = models.CharField(max_length=300)
+    description = models.TextField(blank=True)
+    file_path = models.CharField(max_length=500)
+    resource_type = models.CharField(max_length=10, choices=RESOURCE_TYPES, default='html')
+    category = models.CharField(max_length=100, blank=True)
+    file_size = models.PositiveIntegerField(default=0)
+    is_valid = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['category', 'title']
+
     def __str__(self):
-        return f"{self.student} — {self.lesson} ({self.status})"
+        return self.title
