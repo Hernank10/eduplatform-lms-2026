@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Mis Logros{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Mis Logros</h2>
+  <hr>
+
+  <h4>Obtenidos ({{ mis_logros.count }})</h4>
+  <div class="row mb-4">
+    {% for ua in mis_logros %}
+      <div class="col-md-3 mb-3">
+        <div class="card text-center border-success">
+          <div class="card-body">
+            <h1>{{ ua.achievement.icono }}</h1>
+            <h5 class="card-title">{{ ua.achievement.nombre }}</h5>
+            <p class="card-text small">{{ ua.achievement.descripcion }}</p>
+            <p class="text-muted small">{{ ua.earned_at|date:"d/m/Y" }}</p>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <div class="alert alert-info">Aun no has obtenido logros. Sigue estudiando!</div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <h4>Por obtener ({{ disponibles.count }})</h4>
+  <div class="row">
+    {% for a in disponibles %}
+      <div class="col-md-3 mb-3">
+        <div class="card text-center border-secondary">
+          <div class="card-body">
+            <h1>?</h1>
+            <h5 class="card-title">{{ a.nombre }}</h5>
+            <p class="card-text small">{{ a.descripcion }}</p>
+            <span class="badge bg-secondary">{{ a.puntos }} pts</span>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

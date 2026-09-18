@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Ranking{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Ranking de Estudiantes</h2>
+  <hr>
+
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="card bg-primary text-white">
+        <div class="card-body">
+          <h4 class="card-title">Tu posicion: #{{ mi_posicion }}</h4>
+          <p class="card-text">Tienes {{ mi_puntos.total }} puntos (Nivel {{ mi_puntos.nivel }})</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h4 class="mb-0">Top 20 Estudiantes</h4>
+    </div>
+    <div class="card-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Estudiante</th>
+            <th>Puntos</th>
+            <th>Nivel</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for up in top %}
+            <tr {% if up.user == user %}class="table-primary"{% endif %}>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ up.user.username }}</td>
+              <td>{{ up.total }}</td>
+              <td>{{ up.nivel }}</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="4" class="text-center">Aun no hay datos</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

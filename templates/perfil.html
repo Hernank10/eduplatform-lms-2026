@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Mi perfil{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Mi perfil</h2>
+  <hr>
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-body text-center">
+          <h3>{{ user.username }}</h3>
+          <p class="text-muted">{{ user.email }}</p>
+          <p><span class="badge bg-warning">{{ puntos.total }} pts</span>
+             <span class="badge bg-info">Nivel {{ puntos.nivel }}</span></p>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header"><h5 class="mb-0">Editar perfil</h5></div>
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+            <div class="mb-2">
+              <label class="form-label small">Nombre</label>
+              <input type="text" name="first_name" value="{{ user.first_name }}" class="form-control form-control-sm">
+            </div>
+            <div class="mb-2">
+              <label class="form-label small">Apellido</label>
+              <input type="text" name="last_name" value="{{ user.last_name }}" class="form-control form-control-sm">
+            </div>
+            <div class="mb-2">
+              <label class="form-label small">Email</label>
+              <input type="email" name="email" value="{{ user.email }}" class="form-control form-control-sm">
+            </div>
+            <div class="mb-2">
+              <label class="form-label small">Idioma</label>
+              <select name="language" class="form-select form-select-sm">
+                <option value="es" {% if profile.language == 'es' %}selected{% endif %}>Espanol</option>
+                <option value="en" {% if profile.language == 'en' %}selected{% endif %}>English</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm w-100">Guardar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="card mb-4">
+        <div class="card-header"><h5 class="mb-0">Mis cursos ({{ enrollments.count }})</h5></div>
+        <div class="card-body">
+          {% for e in enrollments %}
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span>{{ e.course.title|truncatechars:60 }}</span>
+              <span class="badge bg-success">{{ e.progress }}%</span>
+            </div>
+          {% empty %}
+            <p class="text-muted">No estas inscrito en ningun curso.</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header"><h5 class="mb-0">Mis logros ({{ logros.count }})</h5></div>
+        <div class="card-body">
+          {% for ua in logros %}
+            <span class="badge bg-success me-1">{{ ua.achievement.icono }} {{ ua.achievement.nombre }}</span>
+          {% empty %}
+            <p class="text-muted">Aun no tienes logros.</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header"><h5 class="mb-0">Mis certificados ({{ certificados.count }})</h5></div>
+        <div class="card-body">
+          {% for c in certificados %}
+            <a href="{% url 'gamification:certificate_detail' c.code %}" class="btn btn-sm btn-warning mb-1">{{ c.course.title }}</a>
+          {% empty %}
+            <p class="text-muted">Aun no tienes certificados.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

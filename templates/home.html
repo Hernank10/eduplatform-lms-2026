@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}EduPlatform - Aprende Castellano{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 80px 0;
+        margin-bottom: 40px;
+    }
+    .hero h1 { font-size: 3rem; font-weight: bold; }
+    .hero p { font-size: 1.3rem; opacity: 0.9; }
+    .stat-card { text-align: center; padding: 20px; }
+    .stat-card h3 { font-size: 2.5rem; font-weight: bold; margin-bottom: 0; }
+    .stat-card p { margin-bottom: 0; color: #6c757d; }
+    .feature-card { transition: transform 0.2s; }
+    .feature-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+    .achievement-icon { font-size: 3rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="container text-center">
+        <h1>Aprende Castellano con 1066 Ejercicios Interactivos</h1>
+        <p class="lead mb-4">50 cursos, 497 recursos, 8 logros y certificados</p>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form action="/courses/" method="get" class="d-flex">
+                    <input type="text" name="q" class="form-control form-control-lg me-2" placeholder="Buscar cursos...">
+                    <button type="submit" class="btn btn-light btn-lg">Buscar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <h3>{{ total_cursos }}</h3>
+                <p>Cursos</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <h3>{{ total_recursos }}</h3>
+                <p>Recursos</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <h3>{{ total_preguntas }}</h3>
+                <p>Ejercicios</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <h3>{{ total_usuarios }}</h3>
+                <p>Usuarios</p>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="mb-4">Cursos destacados</h2>
+    <div class="row mb-5">
+        {% for curso in cursos_destacados %}
+            <div class="col-md-4 mb-3">
+                <div class="card feature-card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ curso.title|truncatechars:60 }}</h5>
+                        <p class="card-text">
+                            <span class="badge bg-info">{{ curso.get_level_display }}</span>
+                            <span class="badge bg-secondary">{{ curso.lessons.count }} lecciones</span>
+                        </p>
+                        <p class="text-muted small">Profesor: {{ curso.teacher.username }}</p>
+                        <a href="{% url 'course_detail' curso.pk %}" class="btn btn-primary btn-sm">Ver curso</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <h2 class="mb-4">Recursos populares</h2>
+    <div class="row mb-5">
+        {% for r in recursos_populares %}
+            <div class="col-md-4 mb-3">
+                <div class="card feature-card h-100">
+                    <div class="card-body">
+                        <h6 class="card-title">{{ r.title|truncatechars:70 }}</h6>
+                        <p class="card-text">
+                            <span class="badge bg-primary">{{ r.get_resource_type_display }}</span>
+                            {% if r.category %}<span class="badge bg-secondary">{{ r.category }}</span>{% endif %}
+                        </p>
+                        <a href="{% url 'resource_detail' r.pk %}" class="btn btn-outline-primary btn-sm">Abrir</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <h2 class="mb-4">Logros disponibles</h2>
+    <div class="row mb-5">
+        {% for logro in logros %}
+            <div class="col-md-3 mb-3">
+                <div class="card text-center feature-card">
+                    <div class="card-body">
+                        <div class="achievement-icon">{{ logro.icono }}</div>
+                        <h6 class="card-title mt-2">{{ logro.nombre }}</h6>
+                        <p class="card-text small">{{ logro.puntos }} pts</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if not user.is_authenticated %}
+        <div class="card bg-primary text-white mb-5">
+            <div class="card-body text-center py-5">
+                <h2>Comienza tu aprendizaje ahora</h2>
+                <p class="lead">Registrate gratis y accede a todos los cursos</p>
+                <a href="/registro/" class="btn btn-light btn-lg">Crear cuenta gratis</a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

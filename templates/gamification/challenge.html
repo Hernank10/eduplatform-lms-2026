@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Desafio del Dia{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Desafio del Dia</h2>
+  <hr>
+
+  {% if desafio %}
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">{{ desafio.titulo }}</h4>
+        <p class="card-text">{{ desafio.descripcion }}</p>
+        <span class="badge bg-warning">{{ desafio.puntos }} pts</span>
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-info">No hay desafio para hoy. Vuelve manana!</div>
+  {% endif %}
+</div>
+{% endblock %}

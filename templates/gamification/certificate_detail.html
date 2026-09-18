@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Certificado {{ cert.code }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="card border-warning">
+    <div class="card-body text-center">
+      <h1>CERTIFICADO</h1>
+      <hr>
+      <p class="lead">Se otorga el presente certificado a</p>
+      <h2>{{ cert.user.get_full_name|default:cert.user.username }}</h2>
+      <p class="lead">por completar exitosamente el curso</p>
+      <h3>{{ cert.course.title }}</h3>
+      <p class="lead">con una calificacion final de <strong>{{ cert.final_score }}</strong></p>
+      <hr>
+      <p><strong>Codigo de verificacion:</strong> {{ cert.code }}</p>
+      <p><strong>Fecha de emision:</strong> {{ cert.issued_at|date:"d/m/Y" }}</p>
+      <hr>
+      <p class="text-muted">EduPlatform - Espanol Global</p>
+    </div>
+  </div>
+  <a href="{% url 'gamification:certificates' %}" class="btn btn-secondary mt-3">Volver</a>
+</div>
+{% endblock %}

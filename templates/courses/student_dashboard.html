@@ -1,53 +1,184 @@
+{% extends 'base.html' %}
 {% load i18n %}
+
+{% block title %}Dashboard del Estudiante{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h2>📊 {% trans "Dashboard del Estudiante" %}</h2>
-    <hr>
+  <h2>Dashboard del Estudiante</h2>
+  <p class="text-muted">Bienvenido, {{ user.get_full_name|default:user.username }}</p>
+  <hr>
 
-    <div class="row">
-        <div class="col-md-8">
-            <h3>📘 {% trans "Mis cursos" %}</h3>
-            {% if progress_data %}
-                {% for item in progress_data %}
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ item.course.title }}</h5>
-                        <p class="card-text">
-                            {% trans "Lecciones completadas:" %} {{ item.completed }} / {{ item.total }}
-                        </p>
-                        <div class="progress">
-                            <div class="progress-bar bg-success" role="progressbar" 
-                                 style="width: {{ item.percent }}%;" 
-                                 aria-valuenow="{{ item.percent }}" aria-valuemin="0" aria-valuemax="100">
-                                {{ item.percent }}%
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            {% else %}
-                <div class="alert alert-info">
-                    {% trans "No estás inscrito en ningún curso aún." %}
-                </div>
-            {% endif %}
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card text-white bg-warning">
+        <div class="card-body">
+          <h3 class="card-title">{{ puntos.total }} pts</h3>
+          <p class="card-text mb-0">Nivel {{ puntos.nivel }}</p>
+          <a href="{% url 'gamification:leaderboard' %}" class="btn btn-sm btn-light mt-2">Ver ranking</a>
         </div>
-
-        <div class="col-md-4">
-            <h3>✅ {% trans "Calificaciones Recientes" %}</h3>
-            {% if recent_submissions %}
-                <ul class="list-group">
-                {% for sub in recent_submissions %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        {{ sub.assessment.title }}
-                        <span class="badge bg-primary rounded-pill">{{ sub.grade }}</span>
-                    </li>
-                {% endfor %}
-                </ul>
-            {% else %}
-                <p>{% trans "No hay entregas registradas todavía." %}</p>
-            {% endif %}
-        </div>
+      </div>
     </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-success">
+        <div class="card-body">
+          <h3 class="card-title">{{ total_logros }}</h3>
+          <p class="card-text mb-0">Logros obtenidos</p>
+          <a href="{% url 'gamification:achievements' %}" class="btn btn-sm btn-light mt-2">Ver logros</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-info">
+        <div class="card-body">
+          <h3 class="card-title">{{ total_certificados }}</h3>
+          <p class="card-text mb-0">Certificados</p>
+          <a href="{% url 'gamification:certificates' %}" class="btn btn-sm btn-light mt-2">Ver certificados</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-primary">
+        <div class="card-body">
+          <h3 class="card-title">{{ total_cursos }}</h3>
+          <p class="card-text mb-0">Cursos inscritos</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card bg-light">
+        <div class="card-body text-center">
+          <h4>{{ total_lecciones_completadas }}</h4>
+          <p class="mb-0">Lecciones completadas</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card bg-light">
+        <div class="card-body text-center">
+          <h4>{{ progress_list.count }}</h4>
+          <p class="mb-0">Lecciones en progreso</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card bg-light">
+        <div class="card-body text-center">
+          <h4>{{ recent_submissions.count }}</h4>
+          <p class="mb-0">Entregas recientes</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h4 class="mb-0">Mis cursos</h4>
+        </div>
+        <div class="card-body">
+          {% if cursos_data %}
+            {% for item in cursos_data %}
+              <div class="card mb-3">
+                <div class="card-body">
+                  <h5 class="card-title">{{ item.course.title }}</h5>
+                  <p class="card-text">
+                    <span class="badge bg-info">{{ item.course.get_level_display }}</span>
+                    <span class="badge bg-secondary">{{ item.lessons_total }} lecciones</span>
+                    {% if item.certificado %}
+                      <span class="badge bg-warning">Certificado</span>
+                    {% endif %}
+                  </p>
+                  <div class="progress mb-2" style="height: 25px;">
+                    <div class="progress-bar bg-success" style="width: {{ item.percent }}%;">
+                      {{ item.percent }}%
+                    </div>
+                  </div>
+                  <p class="small text-muted">
+                    {{ item.lessons_completed }} completadas |
+                    {{ item.lessons_in_progress }} en progreso |
+                    {{ item.lessons_total }} totales
+                  </p>
+                  <div class="d-flex gap-2">
+                    <a href="/courses/{{ item.course.id }}/" class="btn btn-sm btn-outline-primary">Ver curso</a>
+                    {% if item.certificado %}
+                      <a href="{% url 'gamification:certificate_detail' item.certificado.code %}" class="btn btn-sm btn-warning">Ver certificado</a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="alert alert-info">
+              No estas inscrito en ningun curso aun.
+              <a href="/courses/">Explora los cursos disponibles</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h4 class="mb-0">Logros recientes</h4>
+        </div>
+        <div class="card-body">
+          {% if mis_logros %}
+            <ul class="list-group list-group-flush">
+              {% for ua in mis_logros %}
+                <li class="list-group-item d-flex justify-content-between">
+                  <span>{{ ua.achievement.icono }} {{ ua.achievement.nombre|truncatechars:20 }}</span>
+                  <small class="text-muted">{{ ua.earned_at|date:"d/m" }}</small>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="text-muted">Aun no tienes logros.</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header">
+          <h4 class="mb-0">Calificaciones recientes</h4>
+        </div>
+        <div class="card-body">
+          {% if recent_submissions %}
+            <ul class="list-group list-group-flush">
+              {% for sub in recent_submissions %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>{{ sub.assessment.title|truncatechars:20 }}</strong><br>
+                    <small class="text-muted">{{ sub.submitted_at|date:"d/m/Y" }}</small>
+                  </div>
+                  {% if sub.grade %}
+                    <span class="badge bg-success rounded-pill">{{ sub.grade }}</span>
+                  {% else %}
+                    <span class="badge bg-warning rounded-pill">Pendiente</span>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="text-muted">No hay entregas registradas.</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header">
+          <h4 class="mb-0">Recursos</h4>
+        </div>
+        <div class="card-body">
+          <a href="/courses/recursos/" class="btn btn-outline-primary w-100">Explorar 497 recursos</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

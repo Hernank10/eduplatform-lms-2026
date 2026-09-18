@@ -126,3 +126,45 @@ class Resource(models.Model):
 
     def __str__(self):
         return self.title
+
+
+
+class InteractiveQuestion(models.Model):
+    """Pregunta interactiva generada desde un recurso JSON."""
+
+    TIPOS = [
+        ('mcq', 'Seleccion multiple'),
+        ('true_false', 'Verdadero / Falso'),
+        ('fill_blank', 'Completar'),
+        ('short', 'Respuesta corta'),
+        ('open', 'Respuesta abierta'),
+    ]
+
+    lesson = models.ForeignKey(
+        Lesson,
+        on_delete=models.CASCADE,
+        related_name='interactive_questions'
+    )
+    resource = models.ForeignKey(
+        Resource,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='interactive_questions'
+    )
+    text = models.TextField(verbose_name='Pregunta')
+    question_type = models.CharField(max_length=20, choices=TIPOS, default='short')
+    correct_answer = models.TextField(blank=True, verbose_name='Respuesta correcta')
+    explanation = models.TextField(blank=True, verbose_name='Explicacion')
+    options = models.JSONField(default=list, blank=True, verbose_name='Opciones')
+    points = models.PositiveIntegerField(default=1)
+    order = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = 'Pregunta interactiva'
+        verbose_name_plural = 'Preguntas interactivas'
+
+    def __str__(self):
+        return self.text[:60]

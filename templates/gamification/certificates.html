@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Mis Certificados{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Mis Certificados</h2>
+  <hr>
+
+  {% if mis_certs %}
+    <div class="row">
+      {% for cert in mis_certs %}
+        <div class="col-md-6 mb-3">
+          <div class="card border-warning">
+            <div class="card-body">
+              <h5 class="card-title">{{ cert.course.title }}</h5>
+              <p class="card-text">
+                <strong>Codigo:</strong> {{ cert.code }}<br>
+                <strong>Nota final:</strong> {{ cert.final_score }}<br>
+                <strong>Emitido:</strong> {{ cert.issued_at|date:"d/m/Y" }}
+              </p>
+              <a href="{% url 'gamification:certificate_detail' cert.code %}" class="btn btn-warning">Ver certificado</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info">Aun no tienes certificados. Completa un curso para obtener uno.</div>
+  {% endif %}
+</div>
+{% endblock %}
