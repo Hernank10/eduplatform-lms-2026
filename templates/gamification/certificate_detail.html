@@ -1,25 +1,170 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block title %}Certificado {{ cert.code }}{% endblock %}
 
+{% block extra_css %}
+<style>
+    .diploma {
+        border: 15px solid #d4af37;
+        border-radius: 10px;
+        padding: 40px;
+        background: linear-gradient(135deg, #fdfbfb 0%, #f5f5dc 100%);
+        box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+        max-width: 900px;
+        margin: 0 auto;
+        position: relative;
+    }
+    .diploma::before {
+        content: '';
+        position: absolute;
+        top: 10px; left: 10px; right: 10px; bottom: 10px;
+        border: 2px solid #d4af37;
+        border-radius: 5px;
+        pointer-events: none;
+    }
+    .diploma-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .diploma-title {
+        font-family: 'Georgia', serif;
+        font-size: 3rem;
+        font-weight: bold;
+        color: #8b0000;
+        letter-spacing: 5px;
+        margin-bottom: 10px;
+    }
+    .diploma-subtitle {
+        font-family: 'Georgia', serif;
+        font-size: 1.2rem;
+        color: #666;
+        font-style: italic;
+    }
+    .diploma-body {
+        text-align: center;
+        font-family: 'Georgia', serif;
+        font-size: 1.2rem;
+        line-height: 2;
+        color: #333;
+    }
+    .student-name {
+        font-size: 2.2rem;
+        font-weight: bold;
+        color: #1a1a1a;
+        border-bottom: 2px solid #d4af37;
+        display: inline-block;
+        padding: 0 30px 5px;
+        margin: 20px 0;
+    }
+    .course-name {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #8b0000;
+        margin: 15px 0;
+    }
+    .signatures {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 60px;
+        padding-top: 30px;
+    }
+    .signature {
+        text-align: center;
+        width: 250px;
+    }
+    .signature-line {
+        border-top: 2px solid #333;
+        padding-top: 10px;
+        margin-top: 40px;
+    }
+    .signature-name {
+        font-weight: bold;
+        font-size: 1rem;
+        color: #1a1a1a;
+    }
+    .signature-title {
+        font-size: 0.85rem;
+        color: #666;
+        font-style: italic;
+    }
+    .seal {
+        position: absolute;
+        bottom: 40px;
+        right: 40px;
+        width: 100px;
+        height: 100px;
+        border: 3px solid #d4af37;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Georgia', serif;
+        font-weight: bold;
+        color: #d4af37;
+        font-size: 0.7rem;
+        text-align: center;
+        background: rgba(212, 175, 55, 0.1);
+    }
+    .cert-code {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 0.9rem;
+        color: #999;
+    }
+    @media print {
+        .navbar, footer, .btn { display: none !important; }
+        .diploma { box-shadow: none; }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
-  <div class="card border-warning">
-    <div class="card-body text-center">
-      <h1>CERTIFICADO</h1>
-      <hr>
-      <p class="lead">Se otorga el presente certificado a</p>
-      <h2>{{ cert.user.get_full_name|default:cert.user.username }}</h2>
-      <p class="lead">por completar exitosamente el curso</p>
-      <h3>{{ cert.course.title }}</h3>
-      <p class="lead">con una calificacion final de <strong>{{ cert.final_score }}</strong></p>
-      <hr>
-      <p><strong>Codigo de verificacion:</strong> {{ cert.code }}</p>
-      <p><strong>Fecha de emision:</strong> {{ cert.issued_at|date:"d/m/Y" }}</p>
-      <hr>
-      <p class="text-muted">EduPlatform - Espanol Global</p>
+<div class="container mt-4 mb-5">
+    <div class="text-center mb-3">
+        <a href="{% url 'gamification:certificates' %}" class="btn btn-outline-secondary btn-sm">Volver</a>
+        <button onclick="window.print()" class="btn btn-primary btn-sm">Imprimir / Guardar PDF</button>
     </div>
-  </div>
-  <a href="{% url 'gamification:certificates' %}" class="btn btn-secondary mt-3">Volver</a>
+
+    <div class="diploma">
+        <div class="diploma-header">
+            <div class="diploma-title">CERTIFICADO</div>
+            <div class="diploma-subtitle">de finalizacion</div>
+        </div>
+
+        <div class="diploma-body">
+            <p>Se otorga el presente certificado a</p>
+            <div class="student-name">{{ cert.user.get_full_name|default:cert.user.username }}</div>
+            <p>por haber completado exitosamente el curso</p>
+            <div class="course-name">{{ cert.course.title }}</div>
+            <p>con una calificacion final de <strong>{{ cert.final_score }}/100</strong></p>
+            <p style="font-size: 1rem; color: #666;">
+                Otorgado el {{ cert.issued_at|date:"d \d\e F \d\e Y" }}
+            </p>
+        </div>
+
+        <div class="signatures">
+            <div class="signature">
+                <div class="signature-line">
+                    <div class="signature-name">{{ cert.teacher_name|default:"Profesor del curso" }}</div>
+                    <div class="signature-title">{{ cert.teacher_title|default:"Profesor del curso" }}</div>
+                </div>
+            </div>
+            <div class="signature">
+                <div class="signature-line">
+                    <div class="signature-name">{{ cert.director_name|default:"Direccion Academica" }}</div>
+                    <div class="signature-title">{{ cert.director_title|default:"Director Academico" }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="seal">
+            SELLO<br>OFICIAL
+        </div>
+
+        <div class="cert-code">
+            Codigo de verificacion: <strong>{{ cert.code }}</strong>
+        </div>
+    </div>
 </div>
 {% endblock %}

@@ -64,13 +64,19 @@ class UserPoints(models.Model):
     def __str__(self):
         return self.user.username + ': ' + str(self.total) + ' pts'
 
-
 class Certificate(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='certificates')
     course = models.ForeignKey('courses.Course', on_delete=models.CASCADE, related_name='certificates')
     issued_at = models.DateTimeField(auto_now_add=True)
     code = models.CharField(max_length=50, unique=True, blank=True)
     final_score = models.FloatField(default=0)
+
+    # Campos para el diploma
+    teacher_name = models.CharField(max_length=200, blank=True)
+    teacher_title = models.CharField(max_length=200, blank=True, default='Profesor del curso')
+    director_name = models.CharField(max_length=200, blank=True)
+    director_title = models.CharField(max_length=200, blank=True, default='Director Academico')
+    institution = models.CharField(max_length=200, blank=True, default='EduPlatform - Espanol Global')
 
     class Meta:
         unique_together = ('user', 'course')
@@ -79,11 +85,13 @@ class Certificate(models.Model):
     def save(self, *args, **kwargs):
         if not self.code:
             self.code = uuid.uuid4().hex[:12].upper()
+        # Auto-rellenar nombres
+        if not self.teacher_name and self.course and self.course.teacher:
+            self.teacher_name = self.course.teacher.get_full_name() or self.course.teacher.username
         super().save(*args, **kwargs)
 
     def __str__(self):
         return 'Certificado ' + self.code + ' - ' + self.user.username
-
 
 class DailyChallenge(models.Model):
     titulo = models.CharField(max_length=200)
