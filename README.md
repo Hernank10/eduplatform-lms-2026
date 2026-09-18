@@ -18,21 +18,19 @@ Plataforma LMS para la ensenanza de la redaccion en lengua castellana.
 
 ## Instalacion
 
-```bash
-git clone https://github.com/Hernank10/eduplatform_lms.git
-cd eduplatform_lms
+Clonar el repositorio:
+
+git clone https://github.com/Hernank10/eduplatform-lms-2026.git
+cd eduplatform-lms-2026
 pip install django
 python manage.py migrate
 python manage.py runserver 127.0.0.1:8015
-```
 
-## Credenciales
+## Credenciales de prueba
 
-```
 Admin: admin1/admin123
 Profesor: prof1/prof123
 Estudiante: alumno1/alumno123
-```
 
 ## Tecnologias
 
@@ -43,7 +41,7 @@ Estudiante: alumno1/alumno123
 
 ## Repositorio
 
-https://github.com/Hernank10/eduplatform_lms
+https://github.com/Hernank10/eduplatform-lms-2026
 
 ## Licencia
 
