@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "accounts",
     "courses",
     "assessments",
+    "gamification",
 ]
 
 AUTH_USER_MODEL = "accounts.User"
