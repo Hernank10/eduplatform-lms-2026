@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Cursos{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Cursos disponibles</h2>
+  <p class="text-muted">Total: {{ cursos.count }} cursos</p>
+  <hr>
+
+  <div class="row">
+    {% for curso in cursos %}
+      <div class="col-md-4 mb-3">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">{{ curso.title|truncatechars:60 }}</h5>
+            <p class="card-text">
+              <span class="badge bg-info">{{ curso.get_level_display }}</span>
+              <span class="badge bg-secondary">{{ curso.lessons.count }} lecciones</span>
+            </p>
+            <p class="card-text small">{{ curso.description|truncatechars:100 }}</p>
+            <p class="text-muted small">Profesor: {{ curso.teacher.username }}</p>
+            <a href="{% url 'course_detail' curso.pk %}" class="btn btn-primary btn-sm">Ver curso</a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <div class="alert alert-info">No hay cursos disponibles.</div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

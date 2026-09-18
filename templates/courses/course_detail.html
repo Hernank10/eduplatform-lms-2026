@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{{ curso.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <a href="{% url 'course_list' %}" class="btn btn-sm btn-outline-secondary mb-3">Volver a cursos</a>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h2>{{ curso.title }}</h2>
+      <p class="text-muted">{{ curso.description }}</p>
+      <p>
+        <span class="badge bg-info">{{ curso.get_level_display }}</span>
+        <span class="badge bg-secondary">{{ lecciones.count }} lecciones</span>
+        <span class="badge bg-primary">Profesor: {{ curso.teacher.username }}</span>
+      </p>
+
+      {% if not inscrito and user.is_student %}
+        <form method="post" action="{% url 'course_enroll' curso.pk %}" class="d-inline">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-success">Inscribirse en el curso</button>
+        </form>
+      {% elif inscrito %}
+        <span class="badge bg-success">Ya estas inscrito</span>
+      {% endif %}
+
+      {% if certificado %}
+        <a href="{% url 'gamification:certificate_detail' certificado.code %}" class="btn btn-warning btn-sm">Ver certificado</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <h3>Lecciones</h3>
+  <div class="list-group mb-4">
+    {% for leccion in lecciones %}
+      <a href="{% url 'lesson_detail' leccion.pk %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+        <div>
+          <strong>{{ leccion.order }}. {{ leccion.title }}</strong>
+          <br><small class="text-muted">{{ leccion.estimated_minutes }} min</small>
+        </div>
+        <span class="badge bg-primary">Ver</span>
+      </a>
+    {% empty %}
+      <div class="list-group-item">No hay lecciones aun.</div>
+    {% endfor %}
+  </div>
+
+  {% if evaluaciones %}
+    <h3>Evaluaciones</h3>
+    <div class="list-group">
+      {% for ev in evaluaciones %}
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <strong>{{ ev.title }}</strong>
+            <span class="badge bg-info">{{ ev.get_assessment_type_display }}</span>
+          </div>
+          <span class="badge bg-secondary">{{ ev.questions.count }} preguntas</span>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
