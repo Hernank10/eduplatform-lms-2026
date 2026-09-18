@@ -2,12 +2,12 @@ import os
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect, get_object_or_404
 
-from .models import Enrollment, Progress, Course, Lesson, Resource
+from .models import Enrollment, Progress, Course, Lesson, Lesson, Resource
 from assessments.models import Submission
 from gamification.models import UserPoints, UserAchievement, Certificate
 from django.shortcuts import render, get_object_or_404, redirect
 
-from .models import Enrollment, Progress, Course, Lesson
+from .models import Enrollment, Progress, Course, Lesson, Lesson
 from assessments.models import Submission
 from gamification.models import UserPoints, UserAchievement, Certificate
 
