@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{{ evaluacion.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 800px;">
+  <a href="{% url 'course_detail' curso.pk %}" class="btn btn-sm btn-outline-secondary mb-3">Volver al curso</a>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h2>{{ evaluacion.title }}</h2>
+      <p class="text-muted">{{ evaluacion.description }}</p>
+      <p>
+        <span class="badge bg-info">{{ evaluacion.get_assessment_type_display }}</span>
+        <span class="badge bg-secondary">{{ preguntas.count }} preguntas</span>
+        <span class="badge bg-warning">Nota minima: {{ evaluacion.passing_score }}</span>
+      </p>
+    </div>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% for pregunta in preguntas %}
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Pregunta {{ forloop.counter }}</h5>
+          <p class="card-text"><strong>{{ pregunta.text }}</strong></p>
+
+          {% if pregunta.question_type == 'mcq' or pregunta.question_type == 'true_false' %}
+            {% for choice in pregunta.choices.all %}
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="pregunta_{{ pregunta.id }}" value="{{ choice.id }}" id="choice_{{ choice.id }}" required>
+                <label class="form-check-label" for="choice_{{ choice.id }}">
+                  {{ choice.text }}
+                </label>
+              </div>
+            {% endfor %}
+          {% else %}
+            <textarea class="form-control" name="pregunta_{{ pregunta.id }}" rows="4" placeholder="Escribe tu respuesta..."></textarea>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+
+    <div class="d-flex gap-2 mb-4">
+      <button type="submit" class="btn btn-primary btn-lg">Enviar evaluacion</button>
+      <a href="{% url 'course_detail' curso.pk %}" class="btn btn-secondary btn-lg">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

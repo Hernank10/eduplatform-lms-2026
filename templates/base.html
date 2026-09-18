@@ -61,9 +61,12 @@
                                     <li><a class="dropdown-item" href="/admin/">Admin</a></li>
                                 {% endif %}
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="/accounts/logout/">Cerrar sesion</a></li>
-                            </ul>
-                        </li>
+                                <li>
+                                  <form method="post" action="/accounts/logout/" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item">Cerrar sesion</button>
+                                  </form>
+                                </li
                     {% else %}
                         <li class="nav-item"><a class="nav-link" href="/accounts/login/">Entrar</a></li>
                         <li class="nav-item"><a class="btn btn-primary btn-sm mt-1" href="/registro/">Registrarse</a></li>

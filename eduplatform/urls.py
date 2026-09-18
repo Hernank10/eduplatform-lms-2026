@@ -13,6 +13,7 @@ urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
 
     path('accounts/', include('django.contrib.auth.urls')),
+    path('', include('accounts.urls')),  # ← FALTA ESTA LÍNEA
 
     path('courses/', include('courses.urls')),
     path('assessments/', include('assessments.urls')),

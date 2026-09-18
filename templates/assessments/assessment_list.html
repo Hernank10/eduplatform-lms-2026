@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Evaluaciones de {{ curso.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <a href="{% url 'course_detail' curso.pk %}" class="btn btn-sm btn-outline-secondary mb-3">Volver al curso</a>
+
+  <h2>Evaluaciones de {{ curso.title }}</h2>
+  <hr>
+
+  <div class="list-group">
+    {% for ev in evaluaciones %}
+      <a href="{% url 'assessments:take' ev.pk %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+        <div>
+          <strong>{{ ev.title }}</strong>
+          <span class="badge bg-info">{{ ev.get_assessment_type_display }}</span>
+          <br><small class="text-muted">{{ ev.questions.count }} preguntas | Nota minima: {{ ev.passing_score }}</small>
+        </div>
+        <span class="badge bg-primary">Tomar</span>
+      </a>
+    {% empty %}
+      <div class="list-group-item">No hay evaluaciones en este curso.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

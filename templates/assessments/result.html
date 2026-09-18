@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Resultado - {{ evaluacion.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 700px;">
+  <div class="card mb-4">
+    <div class="card-body text-center">
+      <h2>Resultado de la evaluacion</h2>
+      <h3>{{ evaluacion.title }}</h3>
+      <hr>
+
+      {% if submission.grade >= evaluacion.passing_score %}
+        <div class="alert alert-success">
+          <h1>APROBADO</h1>
+          <p class="lead">Tu nota: <strong>{{ submission.grade|floatformat:2 }}/100</strong></p>
+        </div>
+      {% else %}
+        <div class="alert alert-danger">
+          <h1>NO APROBADO</h1>
+          <p class="lead">Tu nota: <strong>{{ submission.grade|floatformat:2 }}/100</strong></p>
+          <p>Nota minima: {{ evaluacion.passing_score }}</p>
+        </div>
+      {% endif %}
+
+      <p class="text-muted">Fecha: {{ submission.submitted_at|date:"d/m/Y H:i" }}</p>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2">
+    <a href="{% url 'course_detail' evaluacion.course.pk %}" class="btn btn-primary">Volver al curso</a>
+    <a href="{% url 'assessments:history' %}" class="btn btn-outline-primary">Ver mi historial</a>
+  </div>
+</div>
+{% endblock %}
