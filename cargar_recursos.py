@@ -1,4 +1,4 @@
-﻿
+
 """
 cargar_recursos.py
 Escanea la carpeta de ejercicios y crea registros Resource en la BD.
